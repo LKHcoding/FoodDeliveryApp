@@ -18,7 +18,6 @@ const useSocket = (): [Socket | undefined, () => void] => {
     console.log(!socket && isLoggedIn, '웹소켓 연결을 진행합니다.');
     socket = SocketIOClient(`${Config.API_URL}`, {
       transports: ['websocket'],
-      path: '/socket-io',
     });
   }
   return [socket, disconnect];
