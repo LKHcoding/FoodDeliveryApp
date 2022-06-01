@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
+import { RootStackParamList } from '../../AppInner';
 import DismissKeyboardView from '../components/DismissKeyboardView';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -74,8 +74,8 @@ function SignUp({ navigation }: SignUpScreenProps) {
         name,
         password, // hash화, 일방향 암호화
       });
-      console.log(result);
       Alert.alert('알림', '회원가입 되었습니다.');
+      navigation.navigate('SignIn');
     } catch (error: any) {
       console.error(error?.response?.data?.message);
       if (error?.response) {
@@ -84,7 +84,7 @@ function SignUp({ navigation }: SignUpScreenProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [email, name, password]);
+  }, [navigation, isLoading, email, name, password]);
 
   const canGoNext = email && name && password;
   return (

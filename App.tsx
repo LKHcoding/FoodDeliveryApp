@@ -10,11 +10,6 @@ export type LoggedInParamList = {
   Complete: { orderId: string };
 };
 
-export type RootStackParamList = {
-  SignIn: undefined;
-  SignUp: undefined;
-};
-
 function App() {
   return (
     <Provider store={store}>
