@@ -17,6 +17,8 @@ import userSlice from './src/slices/user';
 import axios from 'axios';
 import { Alert } from 'react-native';
 import { useAppDispatch } from './src/store';
+import orderSlice from './src/slices/order';
+import usePermissions from './src/hooks/usePermissions';
 
 export type LoggedInParamList = {
   Orders: undefined;
@@ -37,11 +39,47 @@ function AppInner() {
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
   const [socket, disconnect] = useSocket();
   const dispatch = useAppDispatch();
+  usePermissions();
+
+  useEffect(() => {
+    axios.interceptors.response.use(
+      response => {
+        return response;
+      },
+      async error => {
+        const {
+          config,
+          response: { status },
+        } = error;
+        if (status === 419) {
+          if (error.response.data.code === 'expired') {
+            const originalRequest = config;
+            const refreshToken = await EncryptedStorage.getItem('refreshToken');
+            // token refresh 요청
+            const { data } = await axios.post(
+              `${Config.API_URL}/refreshToken`,
+              {},
+              {
+                headers: {
+                  authorization: `Bearer ${refreshToken}`,
+                },
+              },
+            );
+            //  새로운 토큰 저장
+            dispatch(userSlice.actions.setAccessToken(data.data.accessToken));
+            originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
+            return axios(originalRequest);
+          }
+        }
+        return Promise.reject(error);
+      },
+    );
+  }, []);
 
   useEffect(() => {
     const callback = (data: any) => {
       console.log(data);
-      // dispatch(orderSlice.actions.addOrder(data));
+      dispatch(orderSlice.actions.addOrder(data));
     };
     if (socket && isLoggedIn) {
       socket.emit('acceptOrder', 'hello');

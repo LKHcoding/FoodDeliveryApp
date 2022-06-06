@@ -19,7 +19,7 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.fooddeliveryapp.BuildConfig;
+import com.lkhcoding.fooddeliveryapp.BuildConfig;
 import com.fooddeliveryapp.newarchitecture.components.MainComponentsRegistry;
 import com.fooddeliveryapp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
